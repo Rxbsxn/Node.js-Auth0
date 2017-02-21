@@ -5,6 +5,21 @@ var rsaValidation = require('auth0-api-jwt-rsa-validation');
 
 const PORT = 8080;
 
+var jwtCheck = jwt({
+    secret: rsaValidation(),
+    algorithms: ['RS256'],
+    audience: 'moviesapi.com',
+    issuer: "https://rxbsxn.eu.auth0.com/",
+
+});
+
+app.use(jwtCheck);
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    res.status(401).json({message:'Missing or invalid token'});
+  }
+});
+
 app.get('/movies', function (req, res) {
     var movies = [{
             title: 'Suicide Squad',
