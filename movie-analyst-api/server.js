@@ -3,6 +3,8 @@ var app = express();
 var jwt = require('express-jwt');
 var rsaValidation = require('auth0-api-jwt-rsa-validation');
 
+const PORT = 8080;
+
 console.log(rsaValidation());
 var jwtCheck = jwt({
   secret: rsaValidation(),
@@ -16,8 +18,8 @@ var guard = function (req, res, next) {
   switch (req.path) {
     case '/movies':
       {
-        var permissions = ['admin', 'general'];
-        for (var i = 0; i < permissions.length; i++) {
+        let permissions = ['admin', 'general'];
+        for (let i = 0; i < permissions.length; i++) {
           if (req.user.scope.includes(permissions[i]) || req.user.scope.includes(permissions[1])) {
             next();
           } else {
@@ -30,8 +32,8 @@ var guard = function (req, res, next) {
       }
     case '/reviewers':
       {
-        var permissions = ['admin', 'general'];
-        for (var i = 0; i < permissions.length; i++) {
+        let permissions = ['admin', 'general'];
+        for (let i = 0; i < permissions.length; i++) {
           if (req.user.scope.includes(permissions[i]) || req.user.scope.includes(permissions[1])) {
             next();
           } else {
@@ -44,8 +46,8 @@ var guard = function (req, res, next) {
       }
     case '/publications':
       {
-        var permissions = ['admin', 'general'];
-        for (var i = 0; i < permissions.length; i++) {
+        let permissions = ['admin', 'general'];
+        for (let i = 0; i < permissions.length; i++) {
           if (req.user.scope.includes(permissions[i]) || req.user.scope.includes(permissions[1])) {
             next();
           } else {
@@ -58,9 +60,9 @@ var guard = function (req, res, next) {
       }
     case '/pending':
       {
-        var permissions = ['admin'];
+        let permissions = ['admin'];
         console.log(req.user.scope);
-        for (var i = 0; i < permissions.length; i++) {
+        for (let i = 0; i < permissions.length; i++) {
           if (req.user.scope.includes(permissions[i]) || req.user.scope.includes(permissions[1])) {
             next();
           } else {
@@ -240,4 +242,6 @@ app.get('/pending', function (req, res) {
   res.json(pending);
 })
 
-app.listen(8080);
+app.listen(PORT, () => {
+  console.log(`Server listening on port: ${PORT}`);
+});

@@ -2,6 +2,7 @@ var express = require('express');
 var request = require('superagent');
 
 var app = express();
+const PORT = 4000;
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/public/views/');
@@ -16,17 +17,14 @@ var authData = {
   client_secret: NON_INTERACTIVE_CLIENT_SECRET,
   grant_type: 'client_credentials',
   audience: 'http://movielyst.com/',
-}
-// app.use(getAccessToken);
+};
 
-// First, authenticate this client and get an access_token
-// This could be cached
 function getAccessToken(req, res, next){
   request
     .post('https://rxbsxn.eu.auth0.com/oauth/token')
     .send(authData)
     .end(function(err, res) {
-      req.access_token = res.body.access_token
+      req.access_token = res.body.access_token;
       next();
     })
 }
@@ -47,8 +45,8 @@ app.get('/movies', getAccessToken, function(req, res){
         var movies = data.body;
         res.render('movies', { movies: movies} );
       }
-    })
-})
+    });
+});
 
 app.get('/authors', getAccessToken, function(req, res){
   request
@@ -61,8 +59,8 @@ app.get('/authors', getAccessToken, function(req, res){
         var authors = data.body;
         res.render('authors', {authors : authors});
       }
-    })
-})
+    });
+});
 
 app.get('/publications', getAccessToken, function(req, res){
   request
@@ -75,8 +73,8 @@ app.get('/publications', getAccessToken, function(req, res){
         var publications = data.body;
         res.render('publications', {publications : publications});
       }
-    })
-})
+    });
+});
 
 app.get('/pending', getAccessToken, function(req, res){
   request
@@ -89,7 +87,9 @@ app.get('/pending', getAccessToken, function(req, res){
         var movies = data.body;
         res.render('pending', {movies : movies});
       }
-    })
-})
+    });
+});
 
-app.listen(3000);
+app.listen(PORT, () => {
+  console.log(`Server listening on port: ${PORT}`);
+});
